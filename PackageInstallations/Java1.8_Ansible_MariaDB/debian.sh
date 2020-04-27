@@ -14,7 +14,6 @@ else
    echo "============JAVA-VERSION=============="
    java -version
    echo "Java installation is completed successfully"
-   exit 0
 fi
 if [  -f "$ansible"  ]
 then
@@ -26,7 +25,6 @@ else
    sudo apt-add-repository --yes --update ppa:ansible/ansible
    sudo apt install ansible
    ansible --version
-   exit 0
 fi
 echo "Installing Maria DB"
 if [  -f "$mariadb"  ]
