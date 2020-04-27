@@ -1,19 +1,16 @@
 #!/bin/bash
-java -version
-rv= echo $?
-if [[ "$rv" -ne 0 ]]
+java=/usr/bin/java
+if [  -f "$java"  ]
 then
-   echo "Installing JAVA 1.8.0"
-   sudo apt-get install openjdk-8-jre -y
-   echo "============JAVA-VERSION=============="
-   java -version
-   update-alternatives --config  java 1
-   update-alternatives --config  javac 1
-   echo "Java installation is completed successfully"
-elif [[ "$rv" -eq 0 ]]
-then
-   echo "Java is already installed"
-   exit 0
+   echo "Java already installed"
 else
-   echo "Installation failed"
+   echo "Installing JAVA 1.8.0"
+   sudo add-apt-repository ppa:webupd8team/java
+   sudo apt-get update
+   echo "============JAVA-VERSION=============="
+   sudo apt-get install openjdk-8-jre-headless
+   sudo apt-get install openjdk-8-jdk-headless
+   java -version
+   echo "Java installation is completed successfully"
+   exit 0
 fi
