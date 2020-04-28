@@ -4,7 +4,7 @@
   become: true
   tasks:
   - name: installing python-apt dependency
-    yum: name= python3-PyMySQL state=present
+    yum: name=python3-PyMySQL state=present
   - name: Install MariaDB repository
     apt_repository: repo='deb http://ftp.igh.cnrs.fr/pub/mariadb/repo/10.0/ubuntu trusty main' state=present
   - name: Add repository key to the system
