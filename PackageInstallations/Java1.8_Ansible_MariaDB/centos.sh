@@ -2,6 +2,7 @@
 java=/usr/bin/java
 ansible=/usr/bin/ansible
 mariadb=centos.yml
+python=/opt/rh/rh-python36/root/usr/bin/python
 if [  -f "$java"  ]
 then
    echo "Java already installed"
@@ -14,10 +15,21 @@ else
    update-alternatives --config  javac 1
    echo "Java installation is completed successfully"
 fi
+if [ -f "$python" ]; then
+   echo "Python version is 3.6.9"
+else
+   echo "python version needs to be updated"
+   python -V
+   echo "Updating to 3.6 version of python"
+   sudo yum install centos-release-scl -y
+   sudo yum install rh-python36 -y
+   scl enable rh-python36 bash
+   python --version
+fi
 if [  -f "$ansible"  ]
 then
    echo "Ansible already exists"
-   ansible -version
+   ansible --version
 else
    echo "Installing ansible"
    yum install ansible -y
