@@ -1,23 +1,35 @@
 ---
-- name: MariaDB Installation
+- name: MariaDB
   hosts: all
+  gather_facts: true
   become: true
+  vars:
+    mysql_root_password: "Password1"
   tasks:
-  - name: installing python-apt dependency
-    yum: name=python3-PyMySQL state=present
-  - name: Install MariaDB repository
-    apt_repository: repo='deb http://ftp.igh.cnrs.fr/pub/mariadb/repo/10.0/ubuntu trusty main' state=present
-  - name: Add repository key to the system
-    apt_key: keyserver=keyserver.ubuntu.com id=0xcbcb082a1bb943db
-  - name: Install MariaDB Server
-    apt: name=mariadb-server state=latest update_cache=yes
-  - name: Start MariaDB
-    service: name=mysql state=started
-  - name: install mysql connector
-    command: pip install mysql-connector-python
-  - name: Create myapp database
-    mysql_db:
-        name: bobdata
-        state: present
-        login_host: localhost
-        state: present
+    - name: install mariadb
+      yum:
+        name:
+          - mariadb-server
+          - MySQL-python
+        state: latest
+    - name: start mariadb
+      service:
+        name: mariadb
+        enabled: true
+        state: started
+    - name: mysql_root_password
+      mysql_user:
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+        user: root
+        check_implicit_admin: true
+        password: "{{ mysql_root_password }}"
+        host: localhost
+    - name: remove remote root
+      mysql_user:
+        check_implicit_admin: true
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+        user: root
+        host: "{{ ansible_fqdn }}"
+        state: absent
