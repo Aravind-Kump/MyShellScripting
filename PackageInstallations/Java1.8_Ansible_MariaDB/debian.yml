@@ -20,8 +20,8 @@
   - name: install mysql connector
     command: pip install mysql-connector-python
   - name: Create myapp database
-    mysql_db:
-        name: bobdata
-        state: present
-        login_host: localhost
-        state: present
+  #  mysql_db:
+  #      name: bobdata
+  #     state: present
+  #      login_host: localhost
+  #      state: present
