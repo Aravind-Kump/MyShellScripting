@@ -1,12 +1,12 @@
 #!/bin/bash
-FILE=redhat.sh
+FILE=centos.sh
 FILE1=debian.sh
 if [ `which yum` ]; then
         if [  -f "$FILE"  ]; then
             IS_RHEL=1
             echo "OS belongs to RHEL Family"
             echo "Running the installations."
-            sh -x ./redhat.sh
+            sh -x ./centos.sh
         else
             echo "File not present"
         fi
