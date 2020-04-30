@@ -26,7 +26,8 @@ else
    sudo yum install centos-release-scl -y
    sudo yum install rh-python36 -y
    scl enable rh-python36 bash
-   python --version
+   python -V
+   echo "Python version"
 fi
 if [  -f "$ansible"  ]
 then
