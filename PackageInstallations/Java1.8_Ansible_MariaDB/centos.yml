@@ -12,7 +12,7 @@
           - MySQL-python
         state: latest
     - name: Installing mariadb 10.4
-      shell:  sudo tee /etc/yum.repos.d/MariaDB.repo<<EOF
+      shell:  cat /etc/yum.repos.d/MariaDB.repo<<EOF
               [mariadb]
               name = MariaDB
               baseurl = http://yum.mariadb.org/10.4/centos7-amd64
@@ -20,10 +20,10 @@
               gpgcheck=1
               EOF << EOF
     - name: Make install
-      command: sudo yum makecache fast && sudo yum -y install MariaDB-server MariaDB-client
+      command: yum makecache fast && yum -y install MariaDB-server MariaDB-client
 
     - name: Enabling Mariadb service
-      command: sudo systemctl enable --now mariadb
+      command: systemctl enable --now mariadb
 
     - name: mysql_root_password
       mysql_user:
