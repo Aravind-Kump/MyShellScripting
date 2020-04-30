@@ -19,7 +19,7 @@
     service: name=mysql state=started
   - name: install mysql connector
     command: pip install mysql-connector-python
-  - name: Create myapp database
+  #- name: Create myapp database
   #  mysql_db:
   #      name: bobdata
   #     state: present
