@@ -9,27 +9,27 @@
     - name: install mariadb
       yum:
         name:
-          - mariadb-server
           - MySQL-python
         state: latest
-    - name: start mariadb
-      service:
-        name: mariadb
-        enabled: true
-        state: started
+    - name: Installing mariadb 10.4
+      shell:  sudo tee /etc/yum.repos.d/MariaDB.repo<<EOF
+              [mariadb]
+              name = MariaDB
+              baseurl = http://yum.mariadb.org/10.4/centos7-amd64
+              gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+              gpgcheck=1
+              EOF << EOF
+    - name: Make install
+      command: sudo yum makecache fast && sudo yum -y install MariaDB-server MariaDB-client
+
+    - name: Enabling Mariadb service
+      command: sudo systemctl enable --now mariadb
+
     - name: mysql_root_password
       mysql_user:
-        login_user: root
+        login_user: cap
         login_password: "{{ mysql_root_password }}"
         user: root
         check_implicit_admin: true
         password: "{{ mysql_root_password }}"
         host: localhost
-    - name: remove remote root
-      mysql_user:
-        check_implicit_admin: true
-        login_user: root
-        login_password: "{{ mysql_root_password }}"
-        user: root
-        host: "{{ ansible_fqdn }}"
-        state: absent

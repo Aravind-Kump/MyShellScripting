@@ -3,6 +3,8 @@ java=/usr/bin/java
 ansible=/usr/bin/ansible
 mariadb=centos.yml
 python=/opt/rh/rh-python36/root/usr/bin/python
+echo "Installing git"
+yum install git -y
 if [  -f "$java"  ]
 then
    echo "Java already installed"
