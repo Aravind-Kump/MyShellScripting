@@ -6,21 +6,25 @@
   vars:
     mysql_root_password: "Password1"
   tasks:
-    - name: install mariadb
+    - name: install MySql-Python
       yum:
         name:
           - MySQL-python
         state: latest
-    - name: Installing mariadb 10.4
-      shell:  cat /etc/yum.repos.d/MariaDB.repo<<EOF
-              [mariadb]
-              name = MariaDB
-              baseurl = http://yum.mariadb.org/10.4/centos7-amd64
-              gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
-              gpgcheck=1
-              EOF << EOF
-    - name: Make install
-      command: yum makecache fast && yum -y install MariaDB-server MariaDB-client
+
+    - name: copying mariadb 10.4 repo
+      copy:
+         src: ./MariaDB.repo
+         dest: /etc/yum.repos.d/
+         owner: root
+         group: root
+         mode: '0644'
+
+    - name: Installing mariadb
+      yum:
+        name:
+           - MariaDB-server
+        state: present
 
     - name: Enabling Mariadb service
       command: systemctl enable --now mariadb
