@@ -25,9 +25,8 @@ else
    echo "Updating to 3.6 version of python"
    sudo yum install centos-release-scl -y
    sudo yum install rh-python36 -y
-   scl enable rh-python36 bash
-   python -V
-   echo "Python version"
+   source scl enable rh-python36
+   python --version
 fi
 if [  -f "$ansible"  ]
 then
