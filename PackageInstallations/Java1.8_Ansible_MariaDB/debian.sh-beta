@@ -1,13 +1,8 @@
 #!/bin/bash
-<<<<<<< HEAD
-java= /usr/bin/java
-if [[ -f "$java" ]]
-=======
 java=/usr/bin/java
 ansible=/usr/bin/ansible
 mariadb=debian.yml
 if [  -f "$java"  ]
->>>>>>> 52cedea873e1b25d0cd93ee67cad3a57bb9b1e81
 then
    echo "Java already installed"
 else
@@ -19,9 +14,7 @@ else
    echo "============JAVA-VERSION=============="
    java -version
    echo "Java installation is completed successfully"
-<<<<<<< HEAD
    exit 0
-=======
 fi
 if [  -f "$ansible"  ]
 then
@@ -33,22 +26,21 @@ else
    sudo apt-add-repository --yes --update ppa:ansible/ansible
    sudo apt install ansible
    ansible --version
+   exit 0
 fi
 echo "Installing Maria DB"
 if [  -f "$mariadb"  ]
 then
    echo "File exists"
-   echo "localhost ansible_connection=local" > /etc/ansible/hosts
-   apt install python-pip -y
+   echo "localhost ansible-connection=local" > /etc/ansible/hosts
    echo "testing connection"
-   ansible -m ping localhost |  head -1 | grep SUCCESS | awk '{print $3}'
-   if [  $? -eq 0  ]; then
+   ansible -m ping localhost
+   if [ $? == 0 ]; then
        echo " Proceeding for mariadb installation"
-       ansible-playbook ./debian.yml
+       ansible-playbook debian.yml --ask-pass
    else
        echo "Please validate the ansible connections"
    fi
 else
    echo "File doesnot exist, cannot proceed for installations"
->>>>>>> 52cedea873e1b25d0cd93ee67cad3a57bb9b1e81
 fi

@@ -1,0 +1,39 @@
+---
+- name: MariaDB
+  hosts: all
+  gather_facts: true
+  become: true
+  vars:
+    mysql_root_password: "Password1"
+  tasks:
+    - name: install MySql-Python
+      yum:
+        name:
+          - MySQL-python
+        state: latest
+
+    - name: copying mariadb 10.4 repo
+      copy:
+         src: ./MariaDB.repo
+         dest: /etc/yum.repos.d/
+         owner: root
+         group: root
+         mode: '0644'
+
+    - name: Installing mariadb
+      yum:
+        name:
+           - MariaDB-server
+        state: present
+
+    - name: Enabling Mariadb service
+      command: systemctl enable --now mariadb
+
+    - name: mysql_root_password
+      mysql_user:
+        login_user: cap
+        login_password: "{{ mysql_root_password }}"
+        user: root
+        check_implicit_admin: true
+        password: "{{ mysql_root_password }}"
+        host: localhost
