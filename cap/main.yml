@@ -1,0 +1,22 @@
+---
+- name: Project installation
+  hosts: all
+  become: true
+  gather_facts: true 
+  tasks:
+  - name: Get Linux type
+    command: cat /etc/os-release
+    register: output
+
+  - name: Installations happening on REDHAT FAMILY OS Type
+    shell: echo "OS IS FROM REDHAT FAMILY"
+
+  - import_tasks: redhat.yml
+    when: ansible_facts['os_family'] == "RedHat" and ansible_facts['lsb']['major_release']|int >= 6 or ansible_facts['distribution'] == "CentOS" and ansible_facts['distribution_major_version'] >= "6"
+
+  - name: Installations happening on DEBIAN FAMILY OS Type
+    shell: echo "OS IS FROM DEBIAN FAMILY"
+    apt: name={{item}} state=present update_cache=yes
+  - import_tasks: debian.yml
+    when: ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] >= 7
+
