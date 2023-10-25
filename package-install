@@ -1,0 +1,161 @@
+#!/bin/bash
+echo "Installing packages into our Platinum image...."
+sudo apt-get update
+sudo apt-get clean
+sudo apt-get install -y apache2 ca-certificates curl jq git iputils-ping libcurl4 libunwind8 netcat wget sudo mailutils nano vim procps apt-transport-https lsb-release gnupg traceroute s-nail azure-cli rsync libxml2-utils
+#sleep
+echo "Task completed... sleeping"
+sudo sleep 1m
+
+#!/bin/bash
+echo "Installing Docker into our Platinum image...."
+# ##############################
+# ## Install Docker ##
+# ##############################
+## Update the apt package index and install packages to allow apt to use a repository over HTTPS ##
+sudo apt-get update
+sudo apt-get -y install ca-certificates curl gnupg
+
+## Add Docker’s official GPG key ##
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+## Use the following command to set up the repository ##
+echo \
+  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+## Docker install ##
+sudo apt-get update
+sudo apt-get -y install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# ## post-installation steps for Docker Engine ##
+sudo groupadd docker
+sudo usermod -aG docker $USER
+#sleep
+echo "Task completed... sleeping"
+sudo sleep 1m
+
+
+#!/bin/bash
+
+echo "Download and install Google Chrome"
+CHROME_DEB_URL="https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
+CHROME_DEB_NAME="google-chrome-stable_current_amd64.deb"
+wget $CHROME_DEB_URL -P "/tmp"
+apt install "/tmp/${CHROME_DEB_NAME}" -f -y
+echo "CHROME_BIN=/usr/bin/google-chrome" | tee -a /etc/environment
+#rm "/tmp/${CHROME_DEB_NAME}"
+
+# Get the latest chrome driver version from the web page
+
+# Parse Google Chrome version
+FULL_CHROME_VERSION=$(google-chrome --product-version)
+# Download the chrome driver zip file
+echo "Downloading chromedriver $FULL_CHROME_VERSION..."
+wget "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/$FULL_CHROME_VERSION/linux64/chromedriver-linux64.zip"
+
+# Unzip the file
+unzip chromedriver-linux64.zip
+
+# Move the file to /usr/bin directory
+sudo mv chromedriver-linux64/chromedriver /usr/bin/chromedriver
+
+# Change the owner and permissions of the file
+sudo chown root:root /usr/bin/chromedriver
+sudo chmod +x /usr/bin/chromedriver
+
+# Launch chrome driver from the command-line
+echo "CHROMEWEBDRIVER=/usr/bin/chromedriver" | tee -a /etc/environment
+
+#!/bin/bash
+echo "Installing Java Ant Gradle packages into our Platinum image...."
+sudo apt-get update
+sudo apt-get clean
+sudo apt-get install -y default-jdk openjdk-17-jre openjdk-17-jdk ant gradle openjdk-8-jdk
+sudo echo "JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk-amd64" | tee -a /etc/environment
+sudo echo "JAVA_HOME_11_X64=/usr/lib/jvm/java-1.11.0-openjdk-amd64" | tee -a /etc/environment
+sudo echo "JAVA_HOME_17_X64=/usr/lib/jvm/java-1.17.0-openjdk-amd64" | tee -a /etc/environment
+sudo echo "JAVA_HOME_8_X64=/usr/lib/jvm/java-8-openjdk-amd64" | tee -a /etc/environment
+sudo echo "ANT_HOME=/usr/share/ant" | tee -a /etc/environment
+sudo echo "GRADLE_HOME=/usr/share/gradle" | tee -a /etc/environment
+sudo echo "TMP=/temp/AzDevOps" | tee -a /etc/environment
+sudo echo "M3_HOME=/opt/maven" | tee -a /etc/environment
+sudo echo "MAVEN_HOME=/opt/maven" | tee -a /etc/environment
+sudo echo "PATH=/opt/maven/bin:${PATH}" | tee -a /etc/environment
+#sleep
+echo "Task completed... sleeping"
+sudo sleep 1m
+
+#!/bin/bash
+echo "Installing Az Copy into our Platinum image...."
+##############################
+##############################
+## Install AZ Copy ##
+##############################
+sudo bash -c 'cd /usr/local/bin; curl -L https://aka.ms/downloadazcopy-v10-linux | tar --strip-components=1 --exclude=*.txt -xzvf -; chmod +x azcopy'
+sleep 3
+##############################
+## Install Kubectl ##
+##############################
+echo "Installing Kubectl into our Platinum image...."
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+#sleep
+echo "Kubectl Install completed... sleeping"
+sudo sleep 1m
+##############################
+# Install Helm
+##############################
+curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+echo "Helm Install completed... sleeping"
+sudo sleep 1m
+
+#!/bin/bash
+echo "Installing Maven 3.8.5 into our Platinum image...."
+#############################
+## Install Powershell ##
+#############################
+wget https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.8.5/apache-maven-3.8.5-bin.tar.gz -P /tmp
+sudo tar xf /tmp/apache-maven-*.tar.gz -C /opt
+sudo ln -s /opt/apache-maven-3.8.5 /opt/maven
+sudo touch /etc/profile.d/maven.sh
+#sudo echo "M3_HOME=/opt/maven" | tee -a /etc/profile.d/maven.sh
+#sudo echo "MAVEN_HOME=/opt/maven" | tee -a /etc/profile.d/maven.sh
+#sudo echo "PATH=/opt/maven/bin:${PATH}" | tee -a /etc/profile.d/maven.sh
+sudo chmod +x /etc/profile.d/maven.sh
+sudo ln -s /opt/maven/bin/mvn /usr/bin/
+sudo mkdir -p /opt/data
+sudo chmod 0777 /opt/data
+sudo mkdir -p /temp/AzDevOps
+sudo chmod 0777 /temp/AzDevOps/
+sudo sleep 1m
+sudo ln -s /temp/AzDevOps /tmp/
+#sleep
+echo "Task completed... sleeping"
+sudo sleep 1m
+
+#!/bin/bash
+echo "Installing Powershell into our Platinum image...."
+#############################
+## Install Powershell ##
+#############################
+# Update the list of packages
+sudo apt-get update
+# Install pre-requisite packages.
+sudo apt-get install -y wget apt-transport-https software-properties-common
+# Download the Microsoft repository GPG keys
+wget -q "https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb"
+# Register the Microsoft repository GPG keys
+sudo dpkg -i packages-microsoft-prod.deb
+# Delete the the Microsoft repository GPG keys file
+rm packages-microsoft-prod.deb
+# Update the list of packages after we added packages.microsoft.com
+sudo apt-get update
+sudo sleep 1m
+# Install PowerShell
+sudo apt-get install -y powershell
+#sleep
+echo "Task completed... sleeping"
+sudo sleep 1m
